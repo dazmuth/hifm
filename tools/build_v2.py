@@ -10,6 +10,9 @@ IMG = f"{SITE}/assets/img"
 AD_EMAIL = "Magazine.HiFEX@gmail.com"   # from the magazine masthead; swap when the ad-sales address is known
 esc = html.escape
 
+# DEMO ONLY: set to False when building for production (removes the noindex tag from every page)
+NOINDEX = True
+
 # Defaults baked into the HTML (site-info.js can override them; same values here so the pages work without JavaScript)
 CUR_ISSUE, CUR_SEASON = 31, "Fall 2026"
 CATCH = "Hooray for Hollywood"
@@ -166,13 +169,13 @@ STRIP = [30, 12, 11, 9]   # covers shown under "From the Archive" on the home pa
 
 # ------------------------------------------------------------------ shared chrome
 def head(title, desc):
+    ROBOTS = '<meta name="robots" content="noindex, nofollow"><!-- DEMO: remove before launch -->\n' if NOINDEX else ''
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow"><!-- DEMO: remove before launch -->
-<title>{esc(title)}</title>
+{ROBOTS}<title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
@@ -188,12 +191,12 @@ def head(title, desc):
 
 def nav(home=False, active=""):
     p = "" if home else "index.html"
-    items = [("Latest Issue", f"{p}#latest-issue", "latest"), ("Back Cover", f"{p}#back-cover", "back"),
+    items = [("Home", "index.html", "home"), ("Latest Issue", f"{p}#latest-issue", "latest"), ("Back Cover", f"{p}#back-cover", "back"),
              ("Archive", "archive.html", "archive"), ("Advertise with Us", f"{p}#advertise", "advertise"),
              ("Contact", "#contact", "contact")]
     li = "".join(f'<li><a href="{h}"{" aria-current=\"page\"" if k == active else ""}>{l}</a></li>' for l, h, k in items)
     return f'''<nav class="nav" aria-label="Primary"><div class="wrap">
-  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+  <div class="nav-bar"><a class="nav-home" href="index.html"{' aria-current="page"' if active == "home" else ""}>Home</a><button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button></div>
   <ul class="nav-links" id="nav-links">{li}</ul>
 </div></nav>
 '''
@@ -265,7 +268,7 @@ def write(name, content):
 def home():
     h = head("Hollywood International Filmmaker — Fall 2026 Issue",
              "Hollywood International Filmmaker: the quarterly magazine for filmmakers and film lovers. Read the latest issue and browse the archive.")
-    h += chrome_top(home=True)
+    h += chrome_top(home=True, active="home")
     # carousel
     slides = ""
     for key, f, name in CAROUSEL:

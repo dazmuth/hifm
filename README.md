@@ -28,7 +28,7 @@ Rotates every 4 seconds, pauses on hover/focus/touch and with the Pause button, 
 - **Images** are cropped from the PDFs you have (72 dpi), so they are soft. Final images should come from Todd's originals.
 - **Ad slots**: the top leaderboard is a labeled box. Diamond Sofa is the only real ad. The advertising email is the masthead address; replace it.
 - **Footer links** (About, Team, Submit a Story, social, Privacy, Terms, F.A.Q.) go nowhere yet. Issue 29 is a placeholder card.
-- `<meta name="robots" content="noindex">` is on every page. **Remove it at launch.**
+- `noindex` is on every page (switch `NOINDEX = True` in `tools/build_v2.py`). **Set it to False and rebuild at launch.** Claude has a standing note to do this and say so.
 
 ## Proofing notes (text was transcribed from the printed pages)
 - Paul Rudd interview, question 4: the printed answer begins with two sentences pasted from the Farrell interview ("I did find myself being surprisingly reflective. It caught…"). Kept as printed; fix with Todd, in `tools/build_v2.py`.
@@ -38,4 +38,4 @@ Rotates every 4 seconds, pauses on hover/focus/touch and with the Pause button, 
 `_parked/` holds the page-turning magazine reader (StPageFlip, MIT) and the script that converted PDFs to page images. Not used by the site; kept in case it's wanted later.
 
 ## Hosting
-Relative paths everywhere, so it works from any folder or host (GitHub Pages, Cloudflare Pages). GitHub Pages needs a `CNAME` file containing `hi.zylrxxy.site`.
+Relative paths everywhere, so it works from any folder or host (GitHub Pages, Cloudflare Pages). The `CNAME` file (containing `hi.zylrxxy.site`) must stay in the repo root; GitHub Pages uses it to connect the custom domain. Never delete it when replacing files.
